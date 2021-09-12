@@ -1,97 +1,66 @@
 import React, { useState } from 'react'
-import { Donut } from 'react-dial-knob'
 import './App.css';
 
-const BoxSynth = ({children, label}) => (
-  <div className="box-synth">
-    <div className="synth-box-label">{ label }</div>
-    { children }
-  </div>
-)
+function App(props) {
+  const [allParameters, setAllParameters] = useState (
+    {
+      edit: true,
+      arpOn: true,
+      shape: 'sin',
+      attack: 0,
+      decay: 0,
+      sustain: 0,
+      release: 0,
+    }
+  )
 
-function App() {
-  const [attack, setAttack] = useState(0)
-  const [decay, setDecay] = useState(0)
-  const [sustain, setSustain] = useState(0)
-  const [release, setRelease] = useState(0)
+  const handlerChangeParameterOption = (key, options) => {
+    const newParameters = {...allParameters}
+    const currentPosition = options.indexOf(allParameters[key]);
+    let nextPosition = currentPosition + 1;
+    if (currentPosition === options.length - 1) {
+      nextPosition = 0;
+    }
+    newParameters[key] = options[nextPosition];
 
-  return (
+    setAllParameters(newParameters)
+  }
+
+  const handlerChangeParameterSwitch = (key) => {
+    const newParameters = {...allParameters}
+    newParameters[key] = !allParameters[key];
+
+    setAllParameters(newParameters)
+  }
+
+  const handlerChangeParameter = (key, value) => {
+    const newParameters = { ...allParameters }
+    newParameters[key] = value;
+
+    setAllParameters(newParameters)
+  }
+
+
+  return (  
     <div className="App">
-      <BoxSynth label="filters">
-            egeggeg
-      </BoxSynth>
-      <BoxSynth label="filter-envelope">
-        <div className="flex-filter-env">
-          <div className="knob">
-            <Donut
-              diameter={50}
-              min={0}
-              max={127}
-              step={1}
-              value={attack}
-              theme={{
-                  donutColor: 'blue',
-                  donutThickness: 15,
-              }}
-              onValueChange={setAttack}
-              ariaLabelledBy={'my-label'}
-              >
-              <label id={'my-label'}>ATTACK</label>
-            </Donut>
-          </div>
-          <div className="knob">
-            <Donut
-              diameter={50}
-              min={0}
-              max={127}
-              step={1}
-              value={decay}
-              theme={{
-                  donutColor: 'blue',
-                  donutThickness: 15,
-              }}
-              onValueChange={setDecay}
-              ariaLabelledBy={'my-label'}
-              >
-              <label id={'my-label'}>DECAY</label>
-            </Donut>
-          </div>
-          <div className="knob">
-            <Donut
-              diameter={50}
-              min={0}
-              max={127}
-              step={1}
-              value={sustain}
-              theme={{
-                  donutColor: 'blue',
-                  donutThickness: 15,
-              }}
-              onValueChange={setSustain}
-              ariaLabelledBy={'my-label'}
-              >
-              <label id={'my-label'}>SUSTAIN</label>
-            </Donut>
-          </div>
-          <div className="knob">
-            <Donut
-              diameter={50}
-              min={0}
-              max={127}
-              step={1}
-              value={release}
-              theme={{
-                  donutColor: 'blue',
-                  donutThickness: 15,
-              }}
-              onValueChange={setRelease}
-              ariaLabelledBy={'my-label'}
-              >
-              <label id={'my-label'}>RELEASE</label>
-            </Donut>
-          </div>
-        </div>
-      </BoxSynth>
+      <button onClick={() => handlerChangeParameter('attack', 30)}>
+        Set attack 30
+      </button>
+      <button onClick={() => handlerChangeParameter('decay', 30)}>
+        Set decay 30
+      </button>
+      <button onClick={() => handlerChangeParameterSwitch('edit')}>
+        Edit
+      </button>
+      <button onClick={() => handlerChangeParameterSwitch('arpOn')}>
+        ARP On
+      </button>
+      <button onClick={() => handlerChangeParameterOption('shape', ['sin', 'triangle' , 'saw', 'square', 'wave'])}>
+        SHAPE On
+      </button>
+      <pre>
+      {JSON.stringify(allParameters, null, 2)}
+      </pre>
     </div>
   );
 }
